@@ -1,32 +1,28 @@
 package main
 
 import (
-	// "forensic-zip-tool/internal"
+	"forensic-zip-tool/internal/parser"
 	"log"
 	"fmt"
-	"flag"
+	// "flag"
 )
 
-func handleError(err error, customMessage string) {
+func handleError(customMessage string, err error ) {
 	if err != nil {
 		log.Fatalf("Error %s: %s\n", customMessage, err)
 	}
 }
 
+//Flag -adp, -ha and -z stand respectively for artefact definition path, hash algorithm and zip
 func main () {
-	//parse commande line using flags. Flag -adp, -ha and -z stand respectively for artefact definition path, hash algorithm and zip 
-	definitionPath := flag.String("adp", "../../configs/windowsArtifact.yaml", "[Optional] path to the artefact_definition.yaml")
-	hashAlg := flag.String("ha", "sha256", "[Optional] Digest algorithm to use. default sha256")
-    // archivePath := flag.String("z", "", "[Mandatory] Path to store the final ZIP archive")
-
-	flag.Parse()
-
-	// result, errParser := internal.ArtifactParser("/home/lchan/Documents/formations/projet_go/ForensicZipGo/test_directory/windows.yaml", "FILE")
-	// handleError(errParser, "Parsing file\n")
-
-	// fmt.Print(result)
-
-	fmt.Printf("%v\n", *definitionPath)
-	fmt.Printf("%v\n", *hashAlg)
+	//parse flag from cmd line.
+	if err := parser.ParseFlags(); err!=nil {
+		handleError("parsing flag", err)
+	}
+	// parse artefact definition file to only select type = FILE
+	artefactDefMap, artifactParsingErr := parser.ParseArtifact(*parser.DefinitionPath, "FILE")
+	handleError("parsing artefact definition", artifactParsingErr)
+	
+	fmt.Println(artefactDefMap)
 }
 

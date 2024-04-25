@@ -1,4 +1,4 @@
-package internal
+package parser
 
 import(
 	"os"
@@ -34,7 +34,7 @@ func processSources(typeToRetrive string, sources []Source) bool {
 
 // artifactParser parses artifact definitions from a YAML file provided by path and
 // returns a map of artifact names that match the specified type.
-func ArtifactParser(path string, typeToRetrieve string ) (map[string]bool, error){
+func ParseArtifact(path string, typeToRetrieve string ) (map[string]bool, error){
 
 	// open file
 	file, err := os.Open(path)
