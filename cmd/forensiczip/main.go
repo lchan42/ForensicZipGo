@@ -1,10 +1,14 @@
 package main
 
 import (
+	"archive/zip"
 	"forensic-zip-tool/internal/parser"
+	"forensic-zip-tool/internal/zipHandler"
+
 	"log"
-	"fmt"
-	// "flag"
+	// "fmt"
+	// "os"
+
 )
 
 func handleError(customMessage string, err error ) {
@@ -13,6 +17,8 @@ func handleError(customMessage string, err error ) {
 	}
 }
 
+
+
 //Flag -adp, -ha and -z stand respectively for artefact definition path, hash algorithm and zip
 func main () {
 	//parse flag from cmd line.
@@ -20,14 +26,21 @@ func main () {
 		handleError("parsing flag", err)
 	}
 	// parse artefact definition file to only select type = FILE
-	artefactDefMap, artifactParsingErr := parser.ParseArtifact(*parser.DefinitionPath, "FILE")
+	artefactMap, artifactParsingErr := parser.ParseArtifact(*parser.DefinitionPath, "FILE")
 	handleError("parsing artefact definition", artifactParsingErr)
 
-	hashAlg, hashAlgErr := parser.ParseHashAlg(*parser.HashAlg)
+	hasherFunc, hashAlgErr := parser.ParseHashAlg(*parser.HashAlg)
 	handleError("parsing hash algorithm", hashAlgErr)
 
+	// fmt.Println(artefactMap)
+	// fmt.Println(*parser.ArchivePath)
 
-	fmt.Println(artefactDefMap)
-	fmt.Println(hashAlg)
+	// open file
+	archive, achiveErr := zip.OpenReader(*parser.ArchivePath)
+	handleError("failed to open zip file", achiveErr)
+	defer archive.Close()
+
+	//
+	zipHandler.CopySpecificFiles(archive, artefactMap, hasherFunc)
 }
 
