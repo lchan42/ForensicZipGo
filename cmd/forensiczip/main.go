@@ -22,7 +22,12 @@ func main () {
 	// parse artefact definition file to only select type = FILE
 	artefactDefMap, artifactParsingErr := parser.ParseArtifact(*parser.DefinitionPath, "FILE")
 	handleError("parsing artefact definition", artifactParsingErr)
-	
+
+	hashAlg, hashAlgErr := parser.ParseHashAlg(*parser.HashAlg)
+	handleError("parsing hash algorithm", hashAlgErr)
+
+
 	fmt.Println(artefactDefMap)
+	fmt.Println(hashAlg)
 }
 

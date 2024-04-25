@@ -7,23 +7,23 @@ import(
 )
 
 // represent the sources type of each artifactDefinition
-type Source struct {
+type source struct {
 	Type		string
 	Attributes	map[string]interface{}
 }
 
 // represent an artifact struct following the convention stated in https://github.com/ForensicArtifacts/artifacts
-type ArtifactDefinition struct {
+type artifactDefinition struct {
 	Name		string
 	Doc			string
-	Sources		[]Source
+	Sources		[]source
 	SupportedOs	[]string
 	URLS		[]string
 
 }
 
 // processSources checks if sources contains a type that matched typeToRetrive and returns a boolean accordinly
-func processSources(typeToRetrive string, sources []Source) bool {
+func processSources(typeToRetrive string, sources []source) bool {
 	for _, source := range sources {
 		if source.Type == typeToRetrive {
 			return true
@@ -53,7 +53,7 @@ func ParseArtifact(path string, typeToRetrieve string ) (map[string]bool, error)
 
 	// Loop Through artifact decoded
 	for {
-		var artifact ArtifactDefinition
+		var artifact artifactDefinition
 
 		if err := decoder.Decode(&artifact); err != nil {
 			if err == io.EOF {

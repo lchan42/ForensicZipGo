@@ -5,7 +5,7 @@ import "flag"
 //Flag -adp, -ha and -z stand respectively for artefact definition path, hash algorithm and zip
 var (
 	DefinitionPath = flag.String("adp", "../../configs/windowsArtifact.yaml", "[Optional] path to the artefact_definition.yaml")
-	HashAlg        = flag.String("ha", "sha256", "[Optional] Digest algorithm to use. default sha256")
+	HashAlg        = flag.String("ha", "SHA256", "[Optional] Digest algorithm to use. default sha256")
     // ArchivePath := flag.String("z", "", "[Mandatory] Path to store the final ZIP archive")
 
 	// You can define other flags here...
