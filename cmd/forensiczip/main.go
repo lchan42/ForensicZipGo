@@ -4,7 +4,7 @@ import (
 	"forensic-zip-tool/internal"
 	"log"
 	"fmt"
-	"flag"
+	// "flag"
 )
 
 func handleError(err error, customMessage string) {
@@ -15,7 +15,7 @@ func handleError(err error, customMessage string) {
 
 func main () {
 
-	definitionPath := flag.String("definitionPath", )
+	// definitionPath := flag.String("definitionPath", )
 	result, errParser := internal.ArtifactParser("/home/lchan/Documents/formations/projet_go/ForensicZipGo/test_directory/windows.yaml", "FILE")
 	handleError(errParser, "Error while Parsing file\n")
 
