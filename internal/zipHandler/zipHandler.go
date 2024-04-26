@@ -26,18 +26,19 @@ func copyFileToZip(sourceFile *zip.File, destinationZip *zip.Writer) error {
 	fileHeader := &zip.FileHeader{
 		Name:   sourceFile.Name,
 		Method: sourceFile.Method,
+		Extra: append([]byte(nil), sourceFile.FileHeader.Extra...),
+		Flags: sourceFile.Flags,
+		Modified: sourceFile.Modified,
 	}
 
-    // initial thought : Copy metadata from the source file to the destination file header
-	// for some reason the final zip is not readle (seems corrupted) if this line is uncommented
-	// fileHeader.Extra = append(fileHeader.Extra, sourceFile.FileHeader.Extra...)
+	if sourceFile.FileHeader.CreatorVersion >> 8 == 3 {
+		// Unix-specific attributes
+		fileHeader.SetMode(sourceFile.Mode())
+		fileHeader.ExternalAttrs = sourceFile.ExternalAttrs
+	}
+		// add other os specific attribute here when error comes later ....
 
-    // Set file attributes for Unix systems
-    if sourceFile.FileHeader.CreatorVersion >> 8 == 3 {
-        fileHeader.SetMode(sourceFile.Mode())
-		fileHeader.Modified = sourceFile.Modified
-    }
-
+	//Create the new file in the destination zip with the updated header
 	writer, err := destinationZip.CreateHeader(fileHeader)
 	if err != nil {
 		return fmt.Errorf("error creating destination file %s: %w", sourceFile.Name, err)
